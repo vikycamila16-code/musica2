@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CatTunes - Reproductor de Música</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="theme-pink">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">
+      <svg class="cat-paw-icon" viewBox="0 0 100 100">
+        <path d="M50 45 C35 45 25 60 25 75 C25 88 38 95 50 95 C62 95 75 88 75 75 C75 60 65 45 50 45 Z" fill="currentColor"/>
+        <circle cx="25" cy="35" r="12" fill="currentColor"/>
+        <circle cx="42" cy="22" r="12" fill="currentColor"/>
+        <circle cx="58" cy="22" r="12" fill="currentColor"/>
+        <circle cx="75" cy="35" r="12" fill="currentColor"/>
+      </svg>
+      <span>CatTunes</span>
+    </div>
+
+    <div class="search-bar">
+      <i data-lucide="search"></i>
+      <input type="text" id="searchInput" placeholder="Buscar canción, artista o género...">
+    </div>
+
+    <div class="theme-selector">
+      <span>Color de Patitas:</span>
+      <button class="theme-btn theme-btn-pink active" onclick="setTheme('pink')"></button>
+      <button class="theme-btn theme-btn-red" onclick="setTheme('red')"></button>
+      <button class="theme-btn theme-btn-blue" onclick="setTheme('blue')"></button>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-container">
+
+    <!-- HERO / CTA -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Siente el Ritmo Felino 🐾</h1>
+        <p>Sube tus canciones favoritas, organízalas en álbumes, ajusta el ecualizador o experimenta con nuestro sintetizador integrado.</p>
+        <button class="paw-button" onclick="document.getElementById('audioUpload').click()">
+          <svg class="paw-icon-svg" viewBox="0 0 100 100">
+            <path d="M50 45 C35 45 25 60 25 75 C25 88 38 95 50 95 C62 95 75 88 75 75 C75 60 65 45 50 45 Z"/>
+            <circle cx="25" cy="35" r="12"/><circle cx="42" cy="22" r="12"/><circle cx="58" cy="22" r="12"/><circle cx="75" cy="35" r="12"/>
+          </svg>
+          Subir Canción
+        </button>
+        <input type="file" id="audioUpload" accept="audio/*" style="display: none;">
+      </div>
+    </section>
+
+    <!-- CARROUSEL DE GÉNEROS -->
+    <section class="section">
+      <h2 class="section-title"><i data-lucide="disc"></i> Géneros Musicales</h2>
+      <div class="carousel" id="genreCarousel">
+        <div class="carousel-card active" onclick="filterGenre('Todos', this)">
+          <h3>Todos</h3>
+          <p>Todas las pistas</p>
+        </div>
+        <div class="carousel-card" onclick="filterGenre('Pop', this)">
+          <h3>Pop Cat</h3>
+          <p>Ritmos pegajosos</p>
+        </div>
+        <div class="carousel-card" onclick="filterGenre('Lo-Fi', this)">
+          <h3>Lo-Fi Chill</h3>
+          <p>Para relajarse</p>
+        </div>
+        <div class="carousel-card" onclick="filterGenre('Electronic', this)">
+          <h3>Electro Meow</h3>
+          <p>Sintetizadores e intensidad</p>
+        </div>
+        <div class="carousel-card" onclick="filterGenre('Rock', this)">
+          <h3>Rock Purr</h3>
+          <p>Guitarras con garra</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARROUSEL DE ÁLBUMES -->
+    <section class="section">
+      <h2 class="section-title"><i data-lucide="library"></i> Álbumes Destacados</h2>
+      <div class="carousel" id="albumCarousel">
+        <div class="carousel-card active" onclick="filterAlbum('Todos', this)">
+          <h3>Todos los Álbumes</h3>
+        </div>
+        <div class="carousel-card" onclick="filterAlbum('Gatitos Espaciales', this)">
+          <h3>Gatitos Espaciales</h3>
+          <p>Sintetizador & Ambient</p>
+        </div>
+        <div class="carousel-card" onclick="filterAlbum('Noches de Verano', this)">
+          <h3>Noches de Verano</h3>
+          <p>Pop & Relax</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRID DE CANCIONES -->
+    <section class="section">
+      <h2 class="section-title"><i data-lucide="music"></i> Canciones</h2>
+      <div class="song-grid" id="songGrid">
+        <!-- Generado dinámicamente -->
+      </div>
+    </section>
+
+    <!-- SINTETIZADOR DE MÚSICA -->
+    <section class="section synth-container">
+      <h2 class="section-title"><i data-lucide="piano"></i> Sintetizador Integrado</h2>
+      <p style="color: #aaa; margin-bottom: 15px;">¡Crea tus propias melodías felinas en tiempo real!</p>
+      <div class="synth-keyboard" id="synthKeyboard">
+        <button class="synth-key" data-note="261.63">C4</button>
+        <button class="synth-key" data-note="293.66">D4</button>
+        <button class="synth-key" data-note="329.63">E4</button>
+        <button class="synth-key" data-note="349.23">F4</button>
+        <button class="synth-key" data-note="392.00">G4</button>
+        <button class="synth-key" data-note="440.00">A4</button>
+        <button class="synth-key" data-note="493.88">B4</button>
+        <button class="synth-key" data-note="523.25">C5</button>
+      </div>
+    </section>
+
+    <!-- ECUALIZADOR -->
+    <section class="section eq-container">
+      <h2 class="section-title"><i data-lucide="sliders"></i> Ecualizador de Audio</h2>
+      <div class="eq-controls">
+        <div class="eq-band">
+          <label>Bajos (60Hz)</label>
+          <input type="range" id="eqLow" min="-12" max="12" value="0" step="1">
+          <span id="eqLowVal">0 dB</span>
+        </div>
+        <div class="eq-band">
+          <label>Medios (1kHz)</label>
+          <input type="range" id="eqMid" min="-12" max="12" value="0" step="1">
+          <span id="eqMidVal">0 dB</span>
+        </div>
+        <div class="eq-band">
+          <label>Agudos (14kHz)</label>
+          <input type="range" id="eqHigh" min="-12" max="12" value="0" step="1">
+          <span id="eqHighVal">0 dB</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- REPRODUCTOR INFERIOR FIXTURE -->
+  <div class="player-bar">
+    <div class="player-track-info">
+      <img id="playerImg" src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200" alt="Cover">
+      <div>
+        <h4 id="playerTitle">Selecciona una canción</h4>
+        <p id="playerArtist">CatTunes</p>
+      </div>
+    </div>
+
+    <div class="player-controls">
+      <div class="btn-group">
+        <!-- Botón Modo Aleatorio / Lineal -->
+        <button class="paw-button paw-button-icon" id="shuffleBtn" title="Modo: Lineal / Aleatorio" onclick="toggleShuffle()">
+          <i data-lucide="repeat"></i>
+        </button>
+
+        <!-- Botón Anterior -->
+        <button class="paw-button paw-button-icon" title="Anterior" onclick="playPrev()">
+          <i data-lucide="skip-back"></i>
+        </button>
+
+        <!-- Botón Play/Pause -->
+        <button class="paw-button paw-button-icon" id="playBtn" title="Play/Pausa" onclick="togglePlay()">
+          <i data-lucide="play"></i>
+        </button>
+
+        <!-- Botón Siguiente -->
+        <button class="paw-button paw-button-icon" title="Siguiente" onclick="playNext()">
+          <i data-lucide="skip-forward"></i>
+        </button>
+
+        <!-- Botón Descargar -->
+        <button class="paw-button paw-button-icon" title="Descargar Canción" onclick="downloadCurrent()">
+          <i data-lucide="download"></i>
+        </button>
+      </div>
+
+      <div class="progress-container">
+        <span id="currentTime">0:00</span>
+        <input type="range" id="progressBar" value="0" min="0" max="100">
+        <span id="durationTime">0:00</span>
+      </div>
+    </div>
+  </div>
+
+  <audio id="audioPlayer"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
